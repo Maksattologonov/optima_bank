@@ -1,0 +1,11 @@
+server {
+    listen 443 ssl;
+    ssl on;
+    ssl_certificate /etc/letsencrypt/live/example.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/example.com/privkey.pem;
+
+    server_name psychology-therapy.xyz www.psychology-therapy.xyz;
+    location / {
+        proxy_pass http://127.0.0.1:8000;
+    }
+}
