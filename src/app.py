@@ -3,6 +3,7 @@ from starlette.middleware.cors import CORSMiddleware
 from fastapi.templating import Jinja2Templates
 from apis.courier import router as courier_router
 from apis.bid import router as bid_router
+from images.media import router as media_router
 
 templates = Jinja2Templates(directory='common/templates')
 
@@ -22,6 +23,7 @@ def get_application() -> FastAPI:
     )
     application.include_router(router=courier_router)
     application.include_router(router=bid_router)
+    application.include_router(router=media_router)
     application.add_middleware(
         CORSMiddleware,
         allow_origins=origins,
