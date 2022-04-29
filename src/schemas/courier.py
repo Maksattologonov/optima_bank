@@ -45,8 +45,8 @@ class UserGetSchema(BaseModel):
     id: Optional[int]
     email: Optional[str]
     name: Optional[str]
-    last_name: Optional[str]
-    anonymous_name: Optional[str]
+    address: Optional[str]
+    number: Optional[str]
 
     class Config:
         orm_mode = True

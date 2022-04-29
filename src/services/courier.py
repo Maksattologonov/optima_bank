@@ -99,12 +99,14 @@ class AuthService:
             status_code=status.HTTP_400_BAD_REQUEST,
             detail='Повторяющееся значение ключа нарушает уникальное ограничение',
         )
+        address = {1: 'Первомайский', 2: 'Свердловский', 3: 'Октябрьский', 4: 'Ленинский'}
+        rand = random.randrange(1, 5)
         try:
             user = Courier(
                 name=user_data.name,
                 email=user_data.email,
                 number=user_data.number,
-                address=user_data.address,
+                address=address[rand],
                 hashed_password=self.hash_password(user_data.password),
                 created_at=datetime.utcnow(),
                 updated_at=datetime.utcnow(),
