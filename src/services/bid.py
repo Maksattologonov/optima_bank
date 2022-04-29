@@ -7,6 +7,7 @@ from starlette.responses import JSONResponse
 
 from core.database import Session
 from models.bid import Bid
+from models.districts import District
 from schemas.bid import CreateBidSchema
 
 
@@ -20,30 +21,37 @@ class BidService:
             detail='Повторяющееся значение нарушает уникальное ограничение',
         )
         try:
-            img_1 = cls.save_image(image=image_1)
-            img_2 = cls.save_image(image=image_2)
-            code = cls.generate_code()
-            user = Bid(
-                name=bid_form.name,
-                last_name=bid_form.last_name,
-                middle_name=bid_form.middle_name,
-                email=bid_form.email,
-                number=bid_form.number,
-                address_delivery=bid_form.address_delivery,
-                address_live=bid_form.address_live,
-                code=code,
-                city=bid_form.city,
-                image_1=img_1,
-                image_2=img_2,
-                comment=bid_form.comment,
-                status='Заявка создана',
-                created_at=datetime.utcnow(),
-            )
-            db.add(user)
-            db.commit()
-            return JSONResponse(
-                status_code=status.HTTP_200_OK,
-                content="Заявка создана, ждите звонка"
+            dist = db.query(District).filter_by(districts=bid_form.district).first()
+            if dist:
+                img_1 = cls.save_image(image=image_1)
+                img_2 = cls.save_image(image=image_2)
+                code = cls.generate_code()
+                user = Bid(
+                    name=bid_form.name,
+                    last_name=bid_form.last_name,
+                    middle_name=bid_form.middle_name,
+                    email=bid_form.email,
+                    number=bid_form.number,
+                    address_delivery=bid_form.address_delivery,
+                    address_live=bid_form.address_live,
+                    code=code,
+                    district=dist.districts,
+                    city=bid_form.city,
+                    image_1=img_1,
+                    image_2=img_2,
+                    comment=bid_form.comment,
+                    status='Заявка создана',
+                    created_at=datetime.utcnow(),
+                )
+                db.add(user)
+                db.commit()
+                return JSONResponse(
+                    status_code=status.HTTP_200_OK,
+                    content="Заявка создана, ждите звонка"
+                )
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail='Адрес введен неправильно',
             )
         except sqlalchemy.exc.IntegrityError:
             raise exception
@@ -75,5 +83,5 @@ class BidService:
         db.commit()
 
     @classmethod
-    def create_code(cls, db: Session,  email: str):
+    def create_code(cls, db: Session, email: str):
         return cls.generate_code()

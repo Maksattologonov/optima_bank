@@ -28,7 +28,7 @@ class UserCreateSchema(BaseModel):
     name: str
     email: str
     number: str
-    address: str
+    district: str
     password: str
 
     class Config:
@@ -45,7 +45,7 @@ class UserGetSchema(BaseModel):
     id: Optional[int]
     email: Optional[str]
     name: Optional[str]
-    address: Optional[str]
+    district: Optional[str]
     number: Optional[str]
 
     class Config:

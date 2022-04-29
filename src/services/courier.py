@@ -22,6 +22,7 @@ from jose import (
 )
 
 from models.courier import Courier, VerificationCode
+from models.districts import District
 from schemas.courier import (
     TokenSchema,
     UserSchema, UserCreateSchema
@@ -99,14 +100,15 @@ class AuthService:
             status_code=status.HTTP_400_BAD_REQUEST,
             detail='Повторяющееся значение ключа нарушает уникальное ограничение',
         )
-        address = {1: 'Первомайский', 2: 'Свердловский', 3: 'Октябрьский', 4: 'Ленинский'}
+        address = self.session.query(District).filter_by().all()
         rand = random.randrange(1, 5)
+        print(address[rand])
         try:
             user = Courier(
                 name=user_data.name,
                 email=user_data.email,
                 number=user_data.number,
-                address=address[rand],
+                district=address[rand].districts,
                 hashed_password=self.hash_password(user_data.password),
                 created_at=datetime.utcnow(),
                 updated_at=datetime.utcnow(),

@@ -9,6 +9,7 @@ class CreateBidSchema(BaseModel):
     middle_name: str
     number: str
     address_live: str
+    district: str
     email: str
     comment: str
 
@@ -22,4 +23,5 @@ class GetBidSchema(BaseModel):
     number: str
     address_live: str
     email: str
+    district: str
     comment: str

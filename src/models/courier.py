@@ -10,7 +10,7 @@ class Courier(Base):
     name = Column(String(50))
     email = Column(String(100), unique=True, index=True)
     number = Column(String(50))
-    address = Column(String(50))
+    district = Column(String(50), ForeignKey("districts.districts"))
     hashed_password = Column(Text)
     created_at = Column(DateTime)
     updated_at = Column(DateTime)

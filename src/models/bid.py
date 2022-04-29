@@ -18,6 +18,7 @@ class Bid(Base):
     email = Column(String(100), unique=True, nullable=False)
     image_1 = Column(String(255), nullable=False)
     image_2 = Column(String(255), nullable=False)
+    district = Column(String(50), ForeignKey("districts.districts"), nullable=False)
     comment = Column(Text)
     created_at = Column(DateTime)
     status = Column(String(50), nullable=False)
