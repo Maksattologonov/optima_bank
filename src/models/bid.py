@@ -21,4 +21,3 @@ class Bid(Base):
     district = Column(String(50), ForeignKey("districts.districts"), nullable=False)
     comment = Column(Text)
     created_at = Column(DateTime)
-    status = Column(String(50), nullable=False)

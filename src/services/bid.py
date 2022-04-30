@@ -7,6 +7,8 @@ from starlette.responses import JSONResponse
 
 from core.database import Session
 from models.bid import Bid
+from models.courier import Courier
+from models.delivery import Delivery
 from models.districts import District
 from schemas.bid import CreateBidSchema
 
@@ -26,7 +28,7 @@ class BidService:
                 img_1 = cls.save_image(image=image_1)
                 img_2 = cls.save_image(image=image_2)
                 code = cls.generate_code()
-                user = Bid(
+                bid = Bid(
                     name=bid_form.name,
                     last_name=bid_form.last_name,
                     middle_name=bid_form.middle_name,
@@ -40,10 +42,19 @@ class BidService:
                     image_1=img_1,
                     image_2=img_2,
                     comment=bid_form.comment,
-                    status='Заявка создана',
                     created_at=datetime.utcnow(),
                 )
-                db.add(user)
+                db.add(bid)
+                db.commit()
+                # delivery_check = db.query(Delivery.courier).filter_by().first().min()
+                # print(delivery_check)
+                courier = db.query(Courier).filter_by(district=dist.districts).first()
+                delivery = Delivery(
+                    status="Передача карты курьеру",
+                    courier=courier.id,
+                    bid=bid.id
+                )
+                db.add(delivery)
                 db.commit()
                 return JSONResponse(
                     status_code=status.HTTP_200_OK,
