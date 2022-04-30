@@ -101,7 +101,7 @@ class AuthService:
             detail='Повторяющееся значение ключа нарушает уникальное ограничение',
         )
         address = self.session.query(District).filter_by().all()
-        rand = random.randrange(1, 5)
+        rand = random.randrange(1, 4)
         print(address[rand])
         try:
             user = Courier(
