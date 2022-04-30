@@ -48,14 +48,14 @@ class BidService:
                 db.commit()
                 # delivery_check = db.query(Delivery.courier).filter_by().first().min()
                 # print(delivery_check)
-                courier = db.query(Courier).filter_by(district=dist.districts).first()
-                delivery = Delivery(
-                    status="Передача карты курьеру",
-                    courier=courier.id,
-                    bid=bid.id
-                )
-                db.add(delivery)
-                db.commit()
+                # courier = db.query(Courier).filter_by(district=dist.districts).first()
+                # delivery = Delivery(
+                #     status="Передача карты курьеру",
+                #     courier=courier.id,
+                #     bid=bid.id
+                # )
+                # db.add(delivery)
+                # db.commit()
                 return JSONResponse(
                     status_code=status.HTTP_200_OK,
                     content="Заявка создана, ждите звонка"
