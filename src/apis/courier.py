@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends
 from fastapi.security import OAuth2PasswordRequestForm
 
+from core.database import Session, get_session
 from schemas.courier import CreateCourierSchema, UserCreateSchema, TokenSchema, UserGetSchema, UserSchema, EmailSchema, \
     VerifiedCodeSchema
 from services.courier import AuthService, get_current_user, SendMessageWhenCreateUser
@@ -41,3 +42,10 @@ async def send_email_asynchronous(response_model: EmailSchema):
 @router.post('/verified-account', response_model=TokenSchema)
 def verified_account(form_data: VerifiedCodeSchema, service: SendMessageWhenCreateUser = Depends()):
     return service.activate_user(email=form_data.email, code=form_data.code)
+
+
+@router.get("/get-delivery")
+def get_delivery(user: UserSchema = Depends(get_current_user),
+                 db: Session = Depends(get_session),
+                 ):
+    return SendMessageWhenCreateUser.get_delivery(db=db, user_id=user.id)

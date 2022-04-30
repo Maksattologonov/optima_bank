@@ -22,6 +22,7 @@ from jose import (
 )
 
 from models.courier import Courier, VerificationCode
+from models.delivery import Delivery
 from models.districts import District
 from schemas.courier import (
     TokenSchema,
@@ -102,7 +103,6 @@ class AuthService:
         )
         address = self.session.query(District).filter_by().all()
         rand = random.randrange(1, 4)
-        print(address[rand])
         try:
             user = Courier(
                 name=user_data.name,
@@ -205,6 +205,10 @@ class SendMessageWhenCreateUser:
                 cls.delete(user=email)
                 return AuthService.create_token(user)
         raise exception
+
+    @classmethod
+    def get_delivery(cls, db: Session, user_id: Courier.id):
+        return db.query(Delivery).filter_by(courier=user_id).all()
 
     @classmethod
     def check_code(cls, **filters):
