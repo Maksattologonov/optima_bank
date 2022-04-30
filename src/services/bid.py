@@ -3,6 +3,7 @@ from datetime import datetime
 
 import sqlalchemy
 from fastapi import HTTPException, status, UploadFile
+from sqlalchemy import func
 from starlette.responses import JSONResponse
 
 from core.database import Session
@@ -46,16 +47,17 @@ class BidService:
                 )
                 db.add(bid)
                 db.commit()
-                # delivery_check = db.query(Delivery.courier).filter_by().first().min()
-                # print(delivery_check)
-                # courier = db.query(Courier).filter_by(district=dist.districts).first()
-                # delivery = Delivery(
-                #     status="Передача карты курьеру",
-                #     courier=courier.id,
-                #     bid=bid.id
-                # )
-                # db.add(delivery)
-                # db.commit()
+                courier = db.query(Courier).filter_by(district=dist.districts).all()
+                if courier:
+                    for c in courier:
+                        delivery_min = db.query(Delivery).filter_by(courier=c.id).first()
+                        delivery = Delivery(
+                            status="Передача карты курьеру",
+                            courier=c.id,
+                            bid=bid.id
+                        )
+                        db.add(delivery)
+                        db.commit()
                 return JSONResponse(
                     status_code=status.HTTP_200_OK,
                     content="Заявка создана, ждите звонка"
